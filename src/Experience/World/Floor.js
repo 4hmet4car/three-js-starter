@@ -24,7 +24,7 @@ export default class Floor {
   }
 
   setMaterial() {
-    const colorMap = this.resources.items.floorTexture;
+    const colorMap = this.resources.items.uvChecker;
     colorMap.colorSpace = SRGBColorSpace;
 
     this.material = new MeshStandardNodeMaterial({ map: colorMap, transparent: true });
