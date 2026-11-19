@@ -2,6 +2,7 @@ import { uv } from 'three/tsl';
 import { Mesh, MeshStandardNodeMaterial, PlaneGeometry, SRGBColorSpace } from 'three/webgpu';
 import { FLOOR } from '../constants.js';
 import Experience from '../Experience.js';
+import { floorParameters } from '../parameters.js';
 
 export default class Floor {
   constructor() {
@@ -27,7 +28,11 @@ export default class Floor {
     const colorMap = this.resources.items.uvChecker;
     colorMap.colorSpace = SRGBColorSpace;
 
-    this.material = new MeshStandardNodeMaterial({ map: colorMap, transparent: true });
+    this.material = new MeshStandardNodeMaterial({
+      color: floorParameters.material.color,
+      map: colorMap,
+      transparent: true,
+    });
 
     const fade = uv().sub(0.5).length().smoothstep(0.5, 0.2);
     this.material.opacityNode = fade;
@@ -40,7 +45,13 @@ export default class Floor {
     this.scene.add(this.mesh);
   }
 
-  debug() {}
+  async debug(inspector) {
+    this.gui = inspector.createParameters('Floor');
+
+    this.gui.addColor(floorParameters.material, 'color').onChange((event) => {
+      this.material.color.set(event);
+    });
+  }
 
   destroy() {
     this.scene.remove(this.mesh);
